@@ -68,25 +68,17 @@
    3. Whisker Menu - Nút "Start" rộng và nổi bật
    ============================================================ */
 .xfce4-panel #whiskermenu-button {
-  /* Kích thước rộng và cao để cân đối với Docklike */
-  min-width: 140px;       
-  min-height: 34px;       
-  margin: 0px 8px;        
-  padding: 0 16px;
+  min-width: 32px;
+  min-height: 32px;
+  margin: 0px 8px;
+  padding: 0px 4px;
 
-  /* Màu nền đậm để nổi bật */
-  background-color: alpha(@accent, 0.85);
+  background-color: alpha(@accent, 0.25);
   background-image: none;
-  
-  /* Bỏ border cứng, dùng inset box-shadow để không làm mất diện tích bên trong */
-  border: none;
-  box-shadow: inset 0 0 0 1px @accent_dark, 0 0 6px alpha(@accent, 0.5);
-  
-  /* Bo tròn hơn để cân đối với nút dài */
-  border-radius: 12px; 
+  border: 1px solid alpha(@accent, 0.5);
+  border-radius: 8px;
 
-  color: @fg_active;
-  font-weight: bold;
+  box-shadow: none;
   text-shadow: none;
   transition: 200ms;
 }
@@ -106,7 +98,7 @@
 .xfce4-panel #whiskermenu-button:checked {
   background-color: @accent_dark;
   box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.3);
-  border-color: transparent;
+  border-color: @accent_dark;
 }
 
 /* ============================================================
@@ -119,10 +111,8 @@
   border-radius: 10px;
 }
 
-/* Chỉ bỏ viền thừa ở các thành phần cụ thể, GIỮ outline cho điều hướng bàn phím */
-#whiskermenu-window treeview.view,
-#whiskermenu-window button,
-#whiskermenu-window entry {
+/* Bỏ viền thừa nhưng GIỮ outline để điều hướng bàn phím còn thấy focus */
+#whiskermenu-window * {
   border: none;
 }
 
@@ -161,16 +151,23 @@
   background-color: alpha(@panel_bg, 0.1);
   background-image: none;
   color: @fg;
+  border-radius: 0;              /* bản thân khung list không bo */
   outline-color: transparent;
-  transition: 200ms;
 }
 
-/* :hover áp lên từng dòng, :selected cho dòng được chọn / focus bàn phím */
+/* Hover, chọn và click: cùng ngôn ngữ với nút category bên trái */
 #whiskermenu-window treeview.view:hover,
 #whiskermenu-window treeview.view:selected,
 #whiskermenu-window treeview.view:selected:focus {
   background-color: @accent;
   color: @fg_active;
+  border-radius: 5px;            /* bo từng dòng */
+}
+
+#whiskermenu-window treeview.view:active,
+#whiskermenu-window treeview.view:selected:active {
+  background-color: @accent_dark; /* màu khi nhấn, khớp nút trái */
+  border-radius: 5px;
 }
 
 #whiskermenu-window .frame:first-child {
@@ -187,14 +184,6 @@
 #whiskermenu-window iconview:hover {
   background: alpha(@panel_bg, 0.25);
   border: 1px solid rgba(255, 255, 255, 0.25);
-}
-
-/* ============================================================
-   4b. Separator (Dấu phân cách trên Panel)
-   ============================================================ */
-.xfce4-panel.panel separator {
-  background-color: alpha(@fg, 0.2);
-  margin: 4px 2px;
 }
 
 /* ============================================================
