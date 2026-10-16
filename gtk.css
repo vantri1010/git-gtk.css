@@ -1,8 +1,12 @@
 /*
     Title   : gtk.css dark mode (GTK 3.0 - XFCE / Linux Mint 22)
     Author  : lsteam (linuxscoop team) - bản tối ưu hóa
-    Changes : biến màu, bỏ code chết (Vala AppMenu), gộp rule trùng,
-              thu hẹp phạm vi button/entry, sửa focus + window_count + transition
+    Changes : - Thêm biến màu fg_active
+              - Mở rộng và làm nổi bật Whisker Menu Button (nút Start)
+              - Thu hẹp selector `*` trong Whisker Menu Window để tránh mất viền entry
+              - Thêm style cho Separator
+              - Tinh chỉnh Docklike Taskbar (window_count, active glow)
+              - Sửa lỗi focus, transition
 */
 
 /* ============================================================
@@ -14,7 +18,6 @@
 @define-color panel_hover   #494c59;
 @define-color fg            #e6ebef;
 @define-color fg_active     #ffffff;
-
 
 /* ============================================================
    1. XFCE4 Panel
@@ -62,43 +65,52 @@
 }
 
 /* ============================================================
-   3. Whisker Menu - nút trên panel
+   3. Whisker Menu - Nút "Start" rộng và nổi bật
    ============================================================ */
 .xfce4-panel #whiskermenu-button {
-  min-width: 32px;
-  min-height: 32px;
-  margin: 3px 4px;
-  padding: 0;
+  /* Kích thước rộng và cao để cân đối với Docklike */
+  min-width: 140px;       
+  min-height: 34px;       
+  margin: 0px 8px;        
+  padding: 0 16px;
 
-  background-color: alpha(@accent, 0.25);
+  /* Màu nền đậm để nổi bật */
+  background-color: alpha(@accent, 0.85);
   background-image: none;
-  border: 1px solid alpha(@accent, 0.5);
-  border-radius: 8px;
+  
+  /* Bỏ border cứng, dùng inset box-shadow để không làm mất diện tích bên trong */
+  border: none;
+  box-shadow: inset 0 0 0 1px @accent_dark, 0 0 6px alpha(@accent, 0.5);
+  
+  /* Bo tròn hơn để cân đối với nút dài */
+  border-radius: 12px; 
 
-  box-shadow: none;
+  color: @fg_active;
+  font-weight: bold;
   text-shadow: none;
   transition: 200ms;
 }
 
 .xfce4-panel #whiskermenu-button image {
+  /* Phóng to icon để cân đối với nút rộng */
+  -gtk-icon-size: 24px; 
   -gtk-icon-shadow: none;
 }
 
 .xfce4-panel #whiskermenu-button:hover {
   background-color: @accent;
-  border-color: @accent;
-  color: @fg_active;
+  box-shadow: inset 0 0 0 1px @accent, 0 0 10px alpha(@accent, 0.8);
 }
 
 .xfce4-panel #whiskermenu-button:active,
 .xfce4-panel #whiskermenu-button:checked {
   background-color: @accent_dark;
-  border-color: @accent_dark;
-  color: @fg_active;
+  box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.3);
+  border-color: transparent;
 }
 
 /* ============================================================
-   4. Whisker Menu - cửa sổ menu (đã gộp 2 khai báo trùng)
+   4. Whisker Menu - cửa sổ menu
    ============================================================ */
 #whiskermenu-window {
   background-color: alpha(@panel_bg, 0.96);
@@ -107,8 +119,10 @@
   border-radius: 10px;
 }
 
-/* Bỏ viền thừa nhưng GIỮ outline để điều hướng bàn phím còn thấy focus */
-#whiskermenu-window * {
+/* Chỉ bỏ viền thừa ở các thành phần cụ thể, GIỮ outline cho điều hướng bàn phím */
+#whiskermenu-window treeview.view,
+#whiskermenu-window button,
+#whiskermenu-window entry {
   border: none;
 }
 
@@ -129,7 +143,7 @@
   color: @fg;
   margin: 1px 2px 1px 1px;
   border-radius: 5px;
-  transition: 200ms; /* ở rule gốc => mờ vào lẫn mờ ra */
+  transition: 200ms;
 }
 
 #whiskermenu-window button:focus,
@@ -176,9 +190,8 @@
 }
 
 /* ============================================================
-   4.. hêm style cho Separator (Dấu phân cách)1
+   4b. Separator (Dấu phân cách trên Panel)
    ============================================================ */
-
 .xfce4-panel.panel separator {
   background-color: alpha(@fg, 0.2);
   margin: 4px 2px;
