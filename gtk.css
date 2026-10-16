@@ -224,3 +224,61 @@ tooltip {
   border: 1px solid #5294e2;
   border-radius: 4px;
 }
+
+
+/* ============================================================
+   9. Whisker Menu - Docklike Accent Tile
+   ============================================================ */
+
+/* Nút Whisker trên XFCE Panel */
+.xfce4-panel #whiskermenu-button {
+    min-width: 32px;
+    min-height: 32px;
+
+    margin: 3px 4px;
+    padding: 0;
+
+    background-color: rgba(82, 148, 226, 0.18);
+    background-image: none;
+
+    border: 1px solid rgba(82, 148, 226, 0.50);
+    border-radius: 8px;
+
+    box-shadow: none;
+    text-shadow: none;
+}
+
+/* Icon của Whisker */
+.xfce4-panel #whiskermenu-button image {
+    -gtk-icon-shadow: none;
+}
+
+/* Hover: nổi bật hơn nhưng không quá chói */
+.xfce4-panel #whiskermenu-button:hover {
+    background-color: #5294e2;
+    border-color: #5294e2;
+    color: #ffffff;
+}
+
+/* Khi menu được nhấn hoặc đang mở */
+.xfce4-panel #whiskermenu-button:active,
+.xfce4-panel #whiskermenu-button:checked {
+    background-color: #2679db;
+    border-color: #2679db;
+    color: #ffffff;
+}
+
+/* Docklike: giữ phong cách phẳng, bo góc đồng bộ */
+#docklike-plugin button {
+    border-radius: 8px;
+    background-image: none;
+    box-shadow: none;
+}
+
+/* Whisker Menu window: tăng độ tương phản */
+#whiskermenu-window {
+    background-color: rgba(50, 52, 61, 0.96);
+    color: #e6ebef;
+    border: 1px solid rgba(82, 148, 226, 0.30);
+    border-radius: 10px;
+}
