@@ -1,14 +1,26 @@
-/* 
-    Title   : gtk.css dark mode (Optimized for GTK 3.0)
-    Author  : lsteam (linuxscoop team) - Cleaned & Streamlined
-    Fixed   : Removed invalid 'overflow', added scrollbar styling for GTK3
+/*
+    Title   : gtk.css dark mode (GTK 3.0 - XFCE / Linux Mint 22)
+    Author  : lsteam (linuxscoop team) - bản tối ưu hóa
+    Changes : biến màu, bỏ code chết (Vala AppMenu), gộp rule trùng,
+              thu hẹp phạm vi button/entry, sửa focus + window_count + transition
 */
+
+/* ============================================================
+   0. Biến màu - đổi accent ở đây là xong
+   ============================================================ */
+@define-color accent        #5294e2;
+@define-color accent_dark   #2679db;
+@define-color panel_bg      #32343D;
+@define-color panel_hover   #494c59;
+@define-color fg            #e6ebef;
+@define-color fg_active     #ffffff;
+
 
 /* ============================================================
    1. XFCE4 Panel
    ============================================================ */
 .xfce4-panel.panel {
-  background-color: #32343D;
+  background-color: @panel_bg;
   font-weight: normal;
   text-shadow: none;
   -gtk-icon-shadow: none;
@@ -19,78 +31,85 @@
 }
 
 /* ============================================================
-   2. Panel Buttons
+   2. Panel Buttons (reset phẳng chỉ trong panel, không đụng app khác)
    ============================================================ */
+.xfce4-panel button {
+  background-image: none;
+  box-shadow: none;
+  text-shadow: none;
+}
+
 .xfce4-panel.panel button.flat,
 .xfce4-panel.panel button.sidebar-button {
-  color: #e6ebef;
+  color: @fg;
   border-radius: 0;
   border: none;
-  background-color: rgba(50, 52, 61, 0.95);
+  background-color: alpha(@panel_bg, 0.95);
+  transition: 200ms;
 }
 
 .xfce4-panel.panel button.flat:hover,
 .xfce4-panel.panel button.sidebar-button:hover {
-  border: none;
-  background-color: #494c59;
+  background-color: @panel_hover;
 }
 
 .xfce4-panel.panel button.flat:active,
 .xfce4-panel.panel button.sidebar-button:active,
 .xfce4-panel.panel button.flat:checked,
 .xfce4-panel.panel button.sidebar-button:checked {
-  border: none;
-  background-color: #5294e2;
-  color: #ffffff;
+  background-color: @accent;
+  color: @fg_active;
 }
 
 /* ============================================================
-   3. Vala Panel AppMenu Fixes
+   3. Whisker Menu - nút trên panel
    ============================================================ */
-.-vala-panel-appmenu-private {
-  background-color: transparent;
+.xfce4-panel #whiskermenu-button {
+  min-width: 32px;
+  min-height: 32px;
+  margin: 3px 4px;
+  padding: 0;
+
+  background-color: alpha(@accent, 0.25);
   background-image: none;
-  color: #ffffff;
-  box-shadow: inset 0 0;
+  border: 1px solid alpha(@accent, 0.5);
+  border-radius: 8px;
+
+  box-shadow: none;
+  text-shadow: none;
+  transition: 200ms;
 }
 
-.-vala-panel-appmenu-core scrolledwindow,
-.-vala-panel-appmenu-private > menuitem,
-.-vala-panel-appmenu-private > menuitem:first-child > label {
-  margin-top: 0;
-  margin-bottom: 0;
-  padding-top: 0;
-  padding-bottom: 0;
+.xfce4-panel #whiskermenu-button image {
+  -gtk-icon-shadow: none;
 }
 
-menubar.-vala-panel-appmenu-bold > menuitem > label {
-  color: #EFEFEF;
+.xfce4-panel #whiskermenu-button:hover {
+  background-color: @accent;
+  border-color: @accent;
+  color: @fg_active;
 }
 
-menubar.-vala-panel-appmenu-bold > menuitem:first-child > label {
-  font-weight: bolder;
-  color: #EFEFEF;
-}
-
-.-vala-panel-appmenu-private > separator {
-  background-color: transparent;
-  background-image: none;
-  opacity: 0;
+.xfce4-panel #whiskermenu-button:active,
+.xfce4-panel #whiskermenu-button:checked {
+  background-color: @accent_dark;
+  border-color: @accent_dark;
+  color: @fg_active;
 }
 
 /* ============================================================
-   4. Whisker Menu
+   4. Whisker Menu - cửa sổ menu (đã gộp 2 khai báo trùng)
    ============================================================ */
-#whiskermenu-window * {
-  border: 0 solid rgba(50, 52, 61, 0.95);
-  outline: none;
-  /* ✅ ĐÃ XOÁ: overflow: auto;  -- GTK3 không hỗ trợ */
-}
-
 #whiskermenu-window {
-  background-color: rgba(50, 52, 61, 0.8);
-  color: #e6ebef;
-  border-radius: 10px 10px 0 0;
+  background-color: alpha(@panel_bg, 0.96);
+  color: @fg;
+  border: 1px solid alpha(@accent, 0.3);
+  border-radius: 10px;
+}
+
+/* Bỏ viền thừa nhưng GIỮ outline để điều hướng bàn phím còn thấy focus */
+#whiskermenu-window * {
+  border: none;
 }
 
 #whiskermenu-window scrollbar {
@@ -99,59 +118,70 @@ menubar.-vala-panel-appmenu-bold > menuitem:first-child > label {
 
 #whiskermenu-window entry {
   background-color: rgba(0, 0, 0, 0.25);
-  color: #e6ebef;
+  color: @fg;
+  background-image: none;
+  box-shadow: none;
 }
 
 #whiskermenu-window button {
-  background-color: rgba(50, 52, 61, 0);
-  color: #e6ebef;
+  background-color: transparent;
+  background-image: none;
+  color: @fg;
   margin: 1px 2px 1px 1px;
   border-radius: 5px;
-  background-image: none;
-}
-
-#whiskermenu-window treeview {
-  background-color: rgba(50, 52, 61, 0.1);
-  color: #e6ebef;
-  background-image: none;
-  outline-color: rgba(0, 0, 0, 0);
-}
-
-#whiskermenu-window .frame:first-child {
-  background: rgba(50, 52, 61, 0.1);
-  border-radius: 8px;
+  transition: 200ms; /* ở rule gốc => mờ vào lẫn mờ ra */
 }
 
 #whiskermenu-window button:focus,
 #whiskermenu-window button:hover,
-#whiskermenu-window button:active,
-#whiskermenu-window button:selected,
-#whiskermenu-window treeview:selected,
-#whiskermenu-window treeview:hover,
-#whiskermenu-window treeview:active,
-#whiskermenu-window treeview:focus {
-  background-color: #5294e2;
-  color: #ffffff;
-  transition: 200ms;
+#whiskermenu-window button:selected {
+  background-color: @accent;
+  color: @fg_active;
 }
 
 #whiskermenu-window button:active {
-  background: #2679db;
+  background-color: @accent_dark;
 }
 
-#whiskermenu-window treeview:focus {
-  background: transparent;
+#whiskermenu-window treeview.view {
+  background-color: alpha(@panel_bg, 0.1);
+  background-image: none;
+  color: @fg;
+  outline-color: transparent;
+  transition: 200ms;
+}
+
+/* :hover áp lên từng dòng, :selected cho dòng được chọn / focus bàn phím */
+#whiskermenu-window treeview.view:hover,
+#whiskermenu-window treeview.view:selected,
+#whiskermenu-window treeview.view:selected:focus {
+  background-color: @accent;
+  color: @fg_active;
+}
+
+#whiskermenu-window .frame:first-child {
+  background: alpha(@panel_bg, 0.1);
+  border-radius: 8px;
 }
 
 #whiskermenu-window iconview {
   background: transparent;
   border-radius: 10px;
-  color: #ffffff;
+  color: @fg_active;
 }
 
 #whiskermenu-window iconview:hover {
-  background: rgba(50, 52, 61, 0.25);
+  background: alpha(@panel_bg, 0.25);
   border: 1px solid rgba(255, 255, 255, 0.25);
+}
+
+/* ============================================================
+   4.. hêm style cho Separator (Dấu phân cách)1
+   ============================================================ */
+
+.xfce4-panel.panel separator {
+  background-color: alpha(@fg, 0.2);
+  margin: 4px 2px;
 }
 
 /* ============================================================
@@ -160,25 +190,35 @@ menubar.-vala-panel-appmenu-bold > menuitem:first-child > label {
 #docklike-plugin button {
   min-height: 32px;
   min-width: 32px;
+  border-radius: 8px;
+  background-image: none;
+  box-shadow: none;
+  transition: 200ms;
 }
 
-#docklike-plugin .open_group,
-#docklike-plugin .active_group,
-#docklike-plugin .hover_group {
-  background-color: #494c59;
+#docklike-plugin button.open_group,
+#docklike-plugin button.hover_group {
+  background-color: @panel_hover;
 }
 
+/* Cửa sổ đang active: có vạch accent bên dưới để phân biệt với "đang mở" */
+#docklike-plugin button.active_group {
+  background-color: @panel_hover;
+  box-shadow: inset 0 -3px @accent, 0 0 5px alpha(@accent, 0.5);
+}
+
+/* Số cửa sổ: trước đây trùng màu nền nên tàng hình */
 #docklike-plugin .window_count {
-  color: #2679db;
+  color: @accent_dark;
 }
 
-#docklike-plugin .open_group .window_count,
-#docklike-plugin .active_group .window_count {
-  color: #494c59;
+#docklike-plugin button.open_group .window_count,
+#docklike-plugin button.active_group .window_count {
+  color: @fg;
 }
 
 /* ============================================================
-   6. GTK3 Scrollbar (bổ sung – hết lỗi GtkScrollbar trong Eclipse)
+   6. Scrollbar GTK3 (giữ cho Eclipse, nhưng dịu hơn)
    ============================================================ */
 scrollbar {
   background-color: transparent;
@@ -186,99 +226,28 @@ scrollbar {
 }
 
 scrollbar slider {
-  background-color: rgba(82, 148, 226, 0.6);
+  background-color: alpha(@accent, 0.35);
   border-radius: 6px;
   min-width: 6px;
   min-height: 6px;
   margin: 2px;
+  transition: 200ms;
 }
 
 scrollbar slider:hover {
-  background-color: #5294e2;
+  background-color: @accent;
 }
 
 scrollbar slider:active {
-  background-color: #2679db;
+  background-color: @accent_dark;
 }
 
 /* ============================================================
-   7. GTK3 Buttons & Entries (dùng chung – tránh bug render)
-   ============================================================ */
-button {
-  background-image: none;
-  box-shadow: none;
-  text-shadow: none;
-}
-
-entry {
-  background-image: none;
-  box-shadow: none;
-}
-
-/* ============================================================
-   8. Tooltip
+   7. Tooltip
    ============================================================ */
 tooltip {
-  background-color: rgba(50, 52, 61, 0.95);
-  color: #e6ebef;
-  border: 1px solid #5294e2;
+  background-color: alpha(@panel_bg, 0.95);
+  color: @fg;
+  border: 1px solid @accent;
   border-radius: 4px;
-}
-
-
-/* ============================================================
-   9. Whisker Menu - Docklike Accent Tile
-   ============================================================ */
-
-/* Nút Whisker trên XFCE Panel */
-.xfce4-panel #whiskermenu-button {
-    min-width: 32px;
-    min-height: 32px;
-
-    margin: 3px 4px;
-    padding: 0;
-
-    background-color: rgba(82, 148, 226, 0.18);
-    background-image: none;
-
-    border: 1px solid rgba(82, 148, 226, 0.50);
-    border-radius: 8px;
-
-    box-shadow: none;
-    text-shadow: none;
-}
-
-/* Icon của Whisker */
-.xfce4-panel #whiskermenu-button image {
-    -gtk-icon-shadow: none;
-}
-
-/* Hover: nổi bật hơn nhưng không quá chói */
-.xfce4-panel #whiskermenu-button:hover {
-    background-color: #5294e2;
-    border-color: #5294e2;
-    color: #ffffff;
-}
-
-/* Khi menu được nhấn hoặc đang mở */
-.xfce4-panel #whiskermenu-button:active,
-.xfce4-panel #whiskermenu-button:checked {
-    background-color: #2679db;
-    border-color: #2679db;
-    color: #ffffff;
-}
-
-/* Docklike: giữ phong cách phẳng, bo góc đồng bộ */
-#docklike-plugin button {
-    border-radius: 8px;
-    background-image: none;
-    box-shadow: none;
-}
-
-/* Whisker Menu window: tăng độ tương phản */
-#whiskermenu-window {
-    background-color: rgba(50, 52, 61, 0.96);
-    color: #e6ebef;
-    border: 1px solid rgba(82, 148, 226, 0.30);
-    border-radius: 10px;
 }
