@@ -1,12 +1,12 @@
 /*
     Title   : gtk.css dark mode (GTK 3.0 - XFCE / Linux Mint 22)
-    Author  : lsteam (linuxscoop team) - bản tối ưu hóa
-    Changes : - Thêm biến màu fg_active
-              - Mở rộng và làm nổi bật Whisker Menu Button (nút Start)
-              - Thu hẹp selector `*` trong Whisker Menu Window để tránh mất viền entry
-              - Thêm style cho Separator
-              - Tinh chỉnh Docklike Taskbar (window_count, active glow)
-              - Sửa lỗi focus, transition
+    Author  : lsteam (linuxscoop team) - bản cuối
+    Changes : - Docklike: bỏ vạch active tự thêm (Docklike đã tự vẽ indicator)
+              - Whisker window: thu hẹp rule bỏ viền, entry có viền + focus riêng
+              - Thêm style cho separator trong panel
+              - Bỏ -gtk-icon-size (không tồn tại ở GTK3) và glow bị panel cắt
+              - Category dùng :checked thay cho :focus / :selected
+              - hover_group tách màu riêng khỏi open_group
 */
 
 /* ============================================================
@@ -33,8 +33,15 @@
   font-weight: normal;
 }
 
+/* Separator trong panel (nếu plugin vẽ bằng widget GTK) */
+.xfce4-panel separator {
+  background-color: alpha(@fg, 0.15);
+  min-width: 1px;
+  margin: 8px 2px;
+}
+
 /* ============================================================
-   2. Panel Buttons (reset phẳng chỉ trong panel, không đụng app khác)
+   2. Panel Buttons (reset phẳng chỉ trong panel)
    ============================================================ */
 .xfce4-panel button {
   background-image: none;
@@ -65,7 +72,7 @@
 }
 
 /* ============================================================
-   3. Whisker Menu - Nút "Start" rộng và nổi bật
+   3. Whisker Menu - nút "Start"
    ============================================================ */
 .xfce4-panel #whiskermenu-button {
   min-width: 32px;
@@ -84,14 +91,12 @@
 }
 
 .xfce4-panel #whiskermenu-button image {
-  /* Phóng to icon để cân đối với nút rộng */
-  -gtk-icon-size: 24px; 
   -gtk-icon-shadow: none;
 }
 
 .xfce4-panel #whiskermenu-button:hover {
   background-color: @accent;
-  box-shadow: inset 0 0 0 1px @accent, 0 0 10px alpha(@accent, 0.8);
+  box-shadow: inset 0 0 0 1px @accent;
 }
 
 .xfce4-panel #whiskermenu-button:active,
@@ -111,8 +116,11 @@
   border-radius: 10px;
 }
 
-/* Bỏ viền thừa nhưng GIỮ outline để điều hướng bàn phím còn thấy focus */
-#whiskermenu-window * {
+/* Chỉ bỏ viền ở các widget cần, KHÔNG đụng entry */
+#whiskermenu-window button,
+#whiskermenu-window treeview,
+#whiskermenu-window scrolledwindow,
+#whiskermenu-window .frame {
   border: none;
 }
 
@@ -122,11 +130,19 @@
 
 #whiskermenu-window entry {
   background-color: rgba(0, 0, 0, 0.25);
-  color: @fg;
   background-image: none;
+  color: @fg;
   box-shadow: none;
+  border: 1px solid alpha(@accent, 0.35);
+  border-radius: 6px;
+  transition: 200ms;
 }
 
+#whiskermenu-window entry:focus {
+  border-color: @accent;
+}
+
+/* Nút category bên trái */
 #whiskermenu-window button {
   background-color: transparent;
   background-image: none;
@@ -136,9 +152,8 @@
   transition: 200ms;
 }
 
-#whiskermenu-window button:focus,
 #whiskermenu-window button:hover,
-#whiskermenu-window button:selected {
+#whiskermenu-window button:checked {
   background-color: @accent;
   color: @fg_active;
 }
@@ -147,26 +162,26 @@
   background-color: @accent_dark;
 }
 
+/* Danh sách ứng dụng bên phải */
 #whiskermenu-window treeview.view {
   background-color: alpha(@panel_bg, 0.1);
   background-image: none;
   color: @fg;
-  border-radius: 0;              /* bản thân khung list không bo */
+  border-radius: 0;
   outline-color: transparent;
 }
 
-/* Hover, chọn và click: cùng ngôn ngữ với nút category bên trái */
 #whiskermenu-window treeview.view:hover,
 #whiskermenu-window treeview.view:selected,
 #whiskermenu-window treeview.view:selected:focus {
   background-color: @accent;
   color: @fg_active;
-  border-radius: 5px;            /* bo từng dòng */
+  border-radius: 5px;
 }
 
 #whiskermenu-window treeview.view:active,
 #whiskermenu-window treeview.view:selected:active {
-  background-color: @accent_dark; /* màu khi nhấn, khớp nút trái */
+  background-color: @accent_dark;
   border-radius: 5px;
 }
 
@@ -198,18 +213,19 @@
   transition: 200ms;
 }
 
-#docklike-plugin button.open_group,
+#docklike-plugin button.open_group {
+  background-color: @panel_hover;
+}
+
 #docklike-plugin button.hover_group {
-  background-color: @panel_hover;
+  background-color: shade(@panel_hover, 1.15);
 }
 
-/* Cửa sổ đang active: có vạch accent bên dưới để phân biệt với "đang mở" */
+/* Active: chỉ đổi nền, vạch indicator do Docklike tự vẽ */
 #docklike-plugin button.active_group {
-  background-color: @panel_hover;
-  box-shadow: inset 0 -3px @accent, 0 0 5px alpha(@accent, 0.5);
+  background-color: shade(@panel_hover, 1.2);
 }
 
-/* Số cửa sổ: trước đây trùng màu nền nên tàng hình */
 #docklike-plugin .window_count {
   color: @accent_dark;
 }
@@ -220,7 +236,7 @@
 }
 
 /* ============================================================
-   6. Scrollbar GTK3 (giữ cho Eclipse, nhưng dịu hơn)
+   6. Scrollbar GTK3
    ============================================================ */
 scrollbar {
   background-color: transparent;
